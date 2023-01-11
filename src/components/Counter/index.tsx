@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'antd';
-import { useAppDispatch, useAppSelector } from '../../store/hook';
+import { useAppDispatch, useAppSelector } from '../../app/hook';
 
 import {
   decrement,
@@ -8,7 +8,7 @@ import {
   incrementByAmount,
   selectCount,
   incrementAsync
-} from '../../store/features/CountSlice';
+} from '../../features/counter/CountSlice';
 
 export default function Counter() {
   const value = useAppSelector(selectCount);
