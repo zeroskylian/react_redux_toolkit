@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Button } from 'antd';
 import { AppState } from '../../app/store';

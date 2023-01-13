@@ -1,4 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AppState } from '../../app/store';
 
 type PostsItem = {
   id: string;
@@ -16,7 +17,18 @@ const initialState: PostsState = [
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
-  reducers: {},
+  reducers: {
+    addPost: (state, action: PayloadAction<PostsItem>) => {
+      state.push(action.payload);
+    },
+  },
 });
 
 export default postsSlice.reducer;
+export type { PostsItem, PostsState };
+
+export function getPosts(state: AppState) {
+  return state.posts;
+}
+
+export const { addPost } = postsSlice.actions;
