@@ -7,7 +7,7 @@ import {
   increment,
   incrementByAmount,
   selectCount,
-  incrementAsync
+  incrementAsync,
 } from '../../features/counter/CountSlice';
 
 export default function Counter() {
@@ -36,11 +36,12 @@ export default function Counter() {
         加3
       </Button>
 
-      <Button onClick={
-        () => {
+      <Button
+        onClick={() => {
           dispatch(incrementAsync(2));
-        }
-      }>异步加</Button>
+        }}>
+        异步加
+      </Button>
     </div>
   );
 }
