@@ -21,6 +21,14 @@ const postsSlice = createSlice({
     addPost: (state, action: PayloadAction<PostsItem>) => {
       state.push(action.payload);
     },
+    updatePost: (state, action: PayloadAction<PostsItem>) => {
+      const { id, title, content } = action.payload;
+      const existingPost = state.find((post) => post.id === id);
+      if (existingPost) {
+        existingPost.title = title;
+        existingPost.content = content;
+      }
+    },
   },
 });
 
@@ -31,4 +39,4 @@ export function getPosts(state: AppState) {
   return state.posts;
 }
 
-export const { addPost } = postsSlice.actions;
+export const { addPost, updatePost } = postsSlice.actions;

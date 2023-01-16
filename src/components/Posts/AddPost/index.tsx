@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
-import { addPost } from '../../features/posts/postsSlice';
-import { useAppDispatch } from '../../app/hook';
+import { addPost } from '../../../features/posts/postsSlice';
+import { useAppDispatch } from '../../../app/hook';
 
 export default function AddPost() {
   const [title, setTitle] = useState('');
@@ -25,6 +25,7 @@ export default function AddPost() {
           id="postContent"
           name="postContent"
           value={content}
+          style={{ marginTop: '10px' }}
           onChange={(e) => {
             setContent(e.currentTarget.value);
           }}

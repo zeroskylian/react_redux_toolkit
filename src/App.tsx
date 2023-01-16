@@ -4,7 +4,8 @@ import { Provider } from 'react-redux';
 import store from './app/store';
 import Counter from './components/Counter';
 import Posts from './components/Posts';
-import SinglePostPage from './components/SinglePostPage';
+import SinglePostPage from './components/Posts/SinglePostPage';
+import EditPostForm from './components/Posts/EditPostForm';
 
 function App() {
   const routers = [
@@ -14,21 +15,28 @@ function App() {
   return (
     <Provider store={store}>
       <h1>RTK practice</h1>
-      <ul>
-        {routers.map((item) => {
-          return (
-            <li key={item.id}>
-              <Link to={item.path}>{item.title}</Link>
-            </li>
-          );
-        })}
-      </ul>
-      <Switch>
-        <Route path={'/posts'} component={Posts} />
-        <Route path={'/counter'} component={Counter} />
-        <Route exact path="/posts/:id" component={SinglePostPage} />
-        <Redirect to={'/posts'}></Redirect>
-      </Switch>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ width: '200px', marginTop: '20px' }}>
+          <ul style={{ display: 'inline-block' }}>
+            {routers.map((item) => {
+              return (
+                <li key={item.id}>
+                  <Link to={item.path}>{item.title}</Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <div style={{ marginLeft: '20px' }}>
+          <Switch>
+            <Route exact path={'/posts'} component={Posts} />
+            <Route path={'/counter'} component={Counter} />
+            <Route exact path="/posts/:id" component={SinglePostPage} />
+            <Route path={'/editPost/:postId'} component={EditPostForm} />
+            <Redirect to="/posts"></Redirect>
+          </Switch>
+        </div>
+      </div>
     </Provider>
   );
 }

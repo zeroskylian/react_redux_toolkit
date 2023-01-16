@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAppSelector } from '../../app/hook';
-import { getPosts } from '../../features/posts/postsSlice';
+import { useAppSelector } from '../../../app/hook';
+import { getPosts } from '../../../features/posts/postsSlice';
 import { Link } from 'react-router-dom';
 
 export default function PostList() {

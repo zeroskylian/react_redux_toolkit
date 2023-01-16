@@ -1,6 +1,7 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { useAppSelector } from '../../app/hook';
+import { useAppSelector } from '../../../app/hook';
+import { Link } from 'react-router-dom'
 
 export default function SinglePostPage(
   props: RouteComponentProps<{ id: string }>
@@ -22,6 +23,9 @@ export default function SinglePostPage(
       <article className="post">
         <h2>{post.title}</h2>
         <p className="post-content">{post.content}</p>
+        <Link to={`/editPost/${post.id}`} className="button">
+          Edit Post
+        </Link>
       </article>
     </section>
   );
