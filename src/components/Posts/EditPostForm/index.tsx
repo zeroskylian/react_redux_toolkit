@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '../../../app/hook';
+import { useAppDispatch, useAppSelector } from '../../../app/hook';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { updatePost, selectPostById } from '../../../features/posts/postsSlice';
 
-export default function EditPostForm() {
-  
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+export default function EditPostForm(
+  props: RouteComponentProps<{ postId: string }>
+) {
+  const id = props.match.params.postId;
+  console.log(id);
+  const post = useAppSelector((state) => {
+    return selectPostById(state, id);
+  });
+  const history = useHistory();
+  const [title, setTitle] = useState(post?.title);
+  const [content, setContent] = useState(post?.content);
   const dispatch = useAppDispatch();
   return (
     <section>
@@ -33,12 +42,17 @@ export default function EditPostForm() {
         <button
           type="button"
           onClick={() => {
-            if (!title && !content) {
+            if (!post) {
               return;
             }
-            // dispatch(addPost({ id: nanoid(), title, content }));
-            setContent('');
-            setTitle('');
+            if (!title) {
+              return;
+            }
+            if (!content) {
+              return;
+            }
+            dispatch(updatePost({ ...post, content: content, title: title }));
+            history.push(`/posts/${id}`);
           }}>
           保存文章
         </button>

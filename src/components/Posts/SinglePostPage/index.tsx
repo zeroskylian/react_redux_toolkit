@@ -1,16 +1,18 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useAppSelector } from '../../../app/hook';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import PostAuthor from '../PostAuthor';
+import ReactionButtons from '../ReactionButtons';
+import { selectPostById } from '../../../features/posts/postsSlice';
 
 export default function SinglePostPage(
   props: RouteComponentProps<{ id: string }>
 ) {
   const id = props.match.params.id;
-  console.log(id);
-  const post = useAppSelector((state) =>
-    state.posts.find((post) => post.id === id)
-  );
+  const post = useAppSelector((state) => {
+    return selectPostById(state, id);
+  });
   if (!post) {
     return (
       <section>
@@ -22,7 +24,9 @@ export default function SinglePostPage(
     <section>
       <article className="post">
         <h2>{post.title}</h2>
+        <PostAuthor userId={post.user} />
         <p className="post-content">{post.content}</p>
+        <ReactionButtons post={post!} />
         <Link to={`/editPost/${post.id}`} className="button">
           Edit Post
         </Link>

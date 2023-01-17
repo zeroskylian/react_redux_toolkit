@@ -1,14 +1,42 @@
 import React, { useState } from 'react';
-import { nanoid } from 'nanoid';
 import { addPost } from '../../../features/posts/postsSlice';
-import { useAppDispatch } from '../../../app/hook';
+import { useAppDispatch, useAppSelector } from '../../../app/hook';
+import { selectUser } from '../../../features/users/usersSlice';
 
-export default function AddPost() {
+export default function AddPostForm() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [userId, setUserId] = useState('');
   const dispatch = useAppDispatch();
+  const users = useAppSelector(selectUser);
+  const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
+
+  const onTitleChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.currentTarget.value);
+  };
+  const onContentChanged = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.currentTarget.value);
+  };
+  const onAuthorChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setUserId(e.currentTarget.value);
+  };
+  const onSavePostClicked = () => {
+    dispatch(addPost(title, content, userId));
+    setContent('');
+    setTitle('');
+  };
+
+  const userOptions = users.map((user) => {
+    return (
+      <option key={user.id} value={user.id}>
+        {user.name}
+      </option>
+    );
+  });
+
   return (
     <section>
+      <h2>Add a New Post</h2>
       <form>
         <label htmlFor="postTitle">文章标题:</label>
         <input
@@ -16,9 +44,8 @@ export default function AddPost() {
           id="postTitle"
           name="postTitle"
           value={title}
-          onChange={(e) => {
-            setTitle(e.currentTarget.value);
-          }}
+          placeholder="What's on your mind?"
+          onChange={onTitleChanged}
         />
         <label htmlFor="postContent">内容：</label>
         <textarea
@@ -26,20 +53,13 @@ export default function AddPost() {
           name="postContent"
           value={content}
           style={{ marginTop: '10px' }}
-          onChange={(e) => {
-            setContent(e.currentTarget.value);
-          }}
+          onChange={onContentChanged}
         />
-        <button
-          type="button"
-          onClick={() => {
-            if (!title && !content) {
-              return;
-            }
-            dispatch(addPost({ id: nanoid(), title, content }));
-            setContent('');
-            setTitle('');
-          }}>
+        <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
+          <option value=""></option>
+          {userOptions}
+        </select>
+        <button type="button" disabled={!canSave} onClick={onSavePostClicked}>
           保存文章
         </button>
       </form>

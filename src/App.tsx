@@ -15,27 +15,23 @@ function App() {
   return (
     <Provider store={store}>
       <h1>RTK practice</h1>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <div style={{ width: '200px', marginTop: '20px' }}>
-          <ul style={{ display: 'inline-block' }}>
-            {routers.map((item) => {
-              return (
-                <li key={item.id}>
-                  <Link to={item.path}>{item.title}</Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <div style={{ marginLeft: '20px' }}>
-          <Switch>
-            <Route exact path={'/posts'} component={Posts} />
-            <Route path={'/counter'} component={Counter} />
-            <Route exact path="/posts/:id" component={SinglePostPage} />
-            <Route path={'/editPost/:postId'} component={EditPostForm} />
-            <Redirect to="/posts"></Redirect>
-          </Switch>
-        </div>
+      <ul style={{ display: 'inline-block' }}>
+        {routers.map((item) => {
+          return (
+            <li key={item.id}>
+              <Link to={item.path}>{item.title}</Link>
+            </li>
+          );
+        })}
+      </ul>
+      <div style={{ marginLeft: '20px' }}>
+        <Switch>
+          <Route exact path={'/posts'} component={Posts} />
+          <Route path={'/counter'} component={Counter} />
+          <Route exact path="/posts/:id" component={SinglePostPage} />
+          <Route path={'/editPost/:postId'} component={EditPostForm} />
+          <Redirect to="/posts"></Redirect>
+        </Switch>
       </div>
     </Provider>
   );

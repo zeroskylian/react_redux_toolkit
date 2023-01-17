@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../app/hook';
 
 import {
@@ -17,31 +16,31 @@ export default function Counter() {
   return (
     <div>
       <h2>当前数量为: {value}</h2>
-      <Button
+      <button
         onClick={() => {
           dispatch(increment());
         }}>
         加
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={() => {
           dispatch(decrement());
         }}>
         减
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={() => {
           dispatch(incrementByAmount(3));
         }}>
         加3
-      </Button>
+      </button>
 
-      <Button
+      <button
         onClick={() => {
           dispatch(incrementAsync(2));
         }}>
         异步加
-      </Button>
+      </button>
     </div>
   );
 }
