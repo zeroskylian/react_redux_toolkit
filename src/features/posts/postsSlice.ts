@@ -73,6 +73,13 @@ const postsSlice = createSlice({
             content,
             user,
             date: new Date().toISOString(),
+            reactions: {
+              thumbsUp: 0,
+              hooray: 0,
+              heart: 0,
+              rocket: 0,
+              eyes: 0,
+            },
           } as PostsItem,
         };
       },
@@ -111,3 +118,6 @@ export const selectAllPosts = (state: AppState) => state.posts;
 
 export const selectPostById = (state: AppState, postId: string) =>
   state.posts.find((post) => post.id === postId);
+
+export const selectPostByUser = (state: AppState, user: string) =>
+  state.posts.filter((post) => post.user === user);

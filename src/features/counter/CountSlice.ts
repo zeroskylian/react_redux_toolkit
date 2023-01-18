@@ -20,6 +20,17 @@ export const incrementAsync = createAsyncThunk(
   }
 );
 
+export const incrementAsyncAlter = createAsyncThunk(
+  'counter/fetchCountAlter',
+  async (amount: number) => {
+    const response = await fetchCount(amount);
+    return response.data;
+  },
+  {
+    
+  }
+);
+
 export const counterSlice = createSlice({
   name: 'counter',
   initialState,
@@ -45,6 +56,10 @@ export const counterSlice = createSlice({
       })
       .addCase(incrementAsync.rejected, (state) => {
         state.status = 'failed';
+      })
+      .addCase(incrementAsyncAlter.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.value += action.payload;
       });
   },
 });

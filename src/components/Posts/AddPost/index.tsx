@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { addPost } from '../../../features/posts/postsSlice';
 import { useAppDispatch, useAppSelector } from '../../../app/hook';
-import { selectUser } from '../../../features/users/usersSlice';
+import { selectUsers } from '../../../features/users/usersSlice';
 
 export default function AddPostForm() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [userId, setUserId] = useState('');
   const dispatch = useAppDispatch();
-  const users = useAppSelector(selectUser);
+  const users = useAppSelector(selectUsers);
   const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
 
   const onTitleChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
