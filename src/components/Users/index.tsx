@@ -5,14 +5,13 @@ import { useAppSelector } from '../../app/hook';
 
 export default function UserList() {
   const users = useAppSelector(selectUsers);
-
   return (
     <div>
       <ul>
         {users.map((user) => {
           return (
-            <Link to={`/user/${user.id}`}>
-              <li key={user.id}>{user.name}</li>
+            <Link key={user.id} to={`/user/${user.id}`}>
+              <li>{user.name}</li>
             </Link>
           );
         })}

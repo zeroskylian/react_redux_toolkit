@@ -14,7 +14,7 @@ export default function Nav() {
         {routers.map((item) => {
           return (
             <li key={item.id}>
-              {item.id === 3 ? (
+              {item.id === 1 ? (
                 <Link to={item.path}>{item.title + `${time}`}</Link>
               ) : (
                 <Link to={item.path}>{item.title}</Link>
