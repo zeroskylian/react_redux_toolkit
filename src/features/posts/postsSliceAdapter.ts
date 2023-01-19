@@ -1,4 +1,9 @@
-import { createSlice, PayloadAction, createSelector, createEntityAdapter } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  PayloadAction,
+  createSelector,
+  createEntityAdapter,
+} from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 import { AppState } from '../../app/store';
 
@@ -23,11 +28,14 @@ interface PostReactions extends StringNumber {
   eyes: number;
 }
 
-const postAdapter = createEntityAdapter<PostsItem>({sortComparer: (lhs,rhs) => {
-    return rhs.date.localeCompare(lhs.date)
-}})
+const postAdapter = createEntityAdapter<PostsItem>({
+  selectId: (post) => post.id,
+  sortComparer: (lhs, rhs) => {
+    return rhs.date.localeCompare(lhs.date);
+  },
+});
 
-const initialState = postAdapter.getInitialState()
+const initialState = postAdapter.getInitialState();
 
 type PostsState = typeof initialState;
 
@@ -38,7 +46,7 @@ const postsSlice = createSlice({
     addPost: {
       reducer(state, action: PayloadAction<PostsItem, string>) {
         // 更新插入方式
-        postAdapter.addOne(state, action.payload)
+        postAdapter.upsertOne(state, action.payload);
       },
       prepare(title: string, content: string, user: string) {
         return {
@@ -93,11 +101,12 @@ export const { addPost, updatePost, reactionAdded } = postsSlice.actions;
 //   state.posts.find((post) => post.id === postId);
 
 export const {
-    selectAll: selectAllPosts,
-    selectById: selectPostById
+  selectAll: selectAllPosts,
+  selectById: selectPostById,
+  selectIds: selectPostIds,
 } = postAdapter.getSelectors<AppState>((state) => {
-    return state.posts
-})
+  return state.posts;
+});
 
 export const selectPostByUser = createSelector(
   [selectAllPosts, (state: AppState, userId) => userId],
