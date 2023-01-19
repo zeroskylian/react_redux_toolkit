@@ -4,7 +4,7 @@ import { useAppSelector } from '../../../app/hook';
 import { Link } from 'react-router-dom';
 import PostAuthor from '../PostAuthor';
 import ReactionButtons from '../ReactionButtons';
-import { selectPostById } from '../../../features/posts/postsSlice';
+import { selectPostById } from '../../../features/posts/postsSliceAdapter';
 
 export default function SinglePostPage(
   props: RouteComponentProps<{ id: string }>

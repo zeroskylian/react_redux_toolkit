@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hook';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
-import { updatePost, selectPostById } from '../../../features/posts/postsSlice';
+import { updatePost, selectPostById } from '../../../features/posts/postsSliceAdapter';
 
 export default function EditPostForm(
   props: RouteComponentProps<{ postId: string }>

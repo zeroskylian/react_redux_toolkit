@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { addPost } from '../../../features/posts/postsSlice';
+import { addPost } from '../../../features/posts/postsSliceAdapter';
 import { useAppDispatch, useAppSelector } from '../../../app/hook';
 import { selectUsers } from '../../../features/users/usersSlice';
 

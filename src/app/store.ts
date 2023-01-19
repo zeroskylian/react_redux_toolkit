@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/CountSlice';
-import postsReducer from '../features/posts/postsSlice';
+import postsReducer from '../features/posts/postsSliceAdapter';
 import usersSlice from '../features/users/usersSlice';
 import { increment } from '../features/counter/CountSlice';
 

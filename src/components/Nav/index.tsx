@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hook';
-import { selectAllPosts } from '../../features/posts/postsSlice';
+import { selectAllPosts } from '../../features/posts/postsSliceAdapter';
 import { increment, selectCount } from '../../features/counter/CountSlice';
 
 export default function Nav() {
@@ -11,15 +11,15 @@ export default function Nav() {
     { id: 3, title: 'user', path: '/user' },
   ];
   const postsCount = useAppSelector(selectAllPosts).length;
-  const time = useAppSelector(selectCount)
-  const dispatch = useAppDispatch()
+  const time = useAppSelector(selectCount);
+  const dispatch = useAppDispatch();
   return (
     <div>
       <ul style={{ display: 'inline-block' }}>
         {routers.map((item) => {
           return (
             <li key={item.id}>
-              {item.id === 3 ? (
+              {item.id === 1 ? (
                 <Link to={item.path}>{item.title + ` ${time}`}</Link>
               ) : item.id === 2 ? (
                 <Link to={item.path}>{item.title + ` ${postsCount}`}</Link>
@@ -33,7 +33,7 @@ export default function Nav() {
       <button
         style={{ display: 'block' }}
         onClick={() => {
-          dispatch(increment())
+          dispatch(increment());
         }}>
         Add
       </button>

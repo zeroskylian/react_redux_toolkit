@@ -2,10 +2,7 @@ import React from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import { useAppSelector } from '../../../app/hook';
 import { selectUsersById } from '../../../features/users/usersSlice';
-import {
-  // selectPostByUser,
-  selectAllPosts,
-} from '../../../features/posts/postsSlice';
+import { selectPostByUser } from '../../../features/posts/postsSliceAdapter';
 
 export default function UserPostList(
   props: RouteComponentProps<{ id: string }>
@@ -13,8 +10,7 @@ export default function UserPostList(
   const id = props.match.params.id;
   const user = useAppSelector((state) => selectUsersById(state, id));
   const posts = useAppSelector((state) => {
-    const allPost = selectAllPosts(state);
-    return allPost.filter((post) => post.user === id);
+    return selectPostByUser(state, id);
   });
   const renderProps = posts
     .slice()

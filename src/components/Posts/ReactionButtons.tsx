@@ -1,7 +1,6 @@
 import React from 'react';
-import { PostsItem } from '../../features/posts/postsSlice';
+import { PostsItem, reactionAdded } from '../../features/posts/postsSliceAdapter';
 import { useAppDispatch } from '../../app/hook';
-import { reactionAdded } from '../../features/posts/postsSlice';
 
 const reactionEmoji = {
   thumbsUp: '👍',

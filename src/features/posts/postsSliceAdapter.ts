@@ -1,11 +1,6 @@
-const testPost = 1;
-export default testPost;
-/*
-
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createSelector, createEntityAdapter } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 import { AppState } from '../../app/store';
-import { sub } from 'date-fns';
 
 interface StringNumber {
   [key: string]: number;
@@ -28,38 +23,13 @@ interface PostReactions extends StringNumber {
   eyes: number;
 }
 
-type PostsState = PostsItem[];
+const postAdapter = createEntityAdapter<PostsItem>({sortComparer: (lhs,rhs) => {
+    return rhs.date.localeCompare(lhs.date)
+}})
 
-const initialState: PostsState = [
-  {
-    id: '1',
-    title: 'First Post!',
-    content: 'Hello!',
-    user: '0',
-    date: sub(new Date(), { minutes: 10 }).toISOString(),
-    reactions: {
-      thumbsUp: 0,
-      hooray: 0,
-      heart: 0,
-      rocket: 0,
-      eyes: 0,
-    },
-  },
-  {
-    id: '2',
-    title: 'Second Post',
-    content: 'More text',
-    user: '1',
-    date: sub(new Date(), { minutes: 5 }).toISOString(),
-    reactions: {
-      thumbsUp: 0,
-      hooray: 0,
-      heart: 0,
-      rocket: 0,
-      eyes: 0,
-    },
-  },
-];
+const initialState = postAdapter.getInitialState()
+
+type PostsState = typeof initialState;
 
 const postsSlice = createSlice({
   name: 'posts',
@@ -67,7 +37,8 @@ const postsSlice = createSlice({
   reducers: {
     addPost: {
       reducer(state, action: PayloadAction<PostsItem, string>) {
-        state.push(action.payload);
+        // 更新插入方式
+        postAdapter.addOne(state, action.payload)
       },
       prepare(title: string, content: string, user: string) {
         return {
@@ -90,7 +61,8 @@ const postsSlice = createSlice({
     },
     updatePost: (state, action: PayloadAction<PostsItem>) => {
       const { id, title, content } = action.payload;
-      const existingPost = state.find((post) => post.id === id);
+      // 更新查找方式
+      const existingPost = state.entities[id];
       if (existingPost) {
         existingPost.title = title;
         existingPost.content = content;
@@ -101,7 +73,8 @@ const postsSlice = createSlice({
       action: PayloadAction<{ id: string; reaction: string }>
     ) => {
       const { id, reaction } = action.payload;
-      const existingPost = state.find((post) => post.id === id);
+      // 更新查找方式
+      const existingPost = state.entities[id];
       if (existingPost) {
         existingPost.reactions[reaction]++;
       }
@@ -114,13 +87,19 @@ export type { PostsItem, PostReactions, PostsState };
 
 export const { addPost, updatePost, reactionAdded } = postsSlice.actions;
 
-export const selectAllPosts = (state: AppState) => state.posts;
+// export const selectAllPosts = (state: AppState) => state.posts;
 
-export const selectPostById = (state: AppState, postId: string) =>
-  state.posts.find((post) => post.id === postId);
+// export const selectPostById = (state: AppState, postId: string) =>
+//   state.posts.find((post) => post.id === postId);
+
+export const {
+    selectAll: selectAllPosts,
+    selectById: selectPostById
+} = postAdapter.getSelectors<AppState>((state) => {
+    return state.posts
+})
 
 export const selectPostByUser = createSelector(
   [selectAllPosts, (state: AppState, userId) => userId],
   (posts, userId) => posts.filter((post) => post.user === userId)
 );
-*/
