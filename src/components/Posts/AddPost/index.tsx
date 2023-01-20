@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import { addPost } from '../../../features/posts/postsSliceAdapter';
+import { addNewPost } from '../../../features/posts/postsSliceAdapter';
 import { useAppDispatch, useAppSelector } from '../../../app/hook';
 import { selectUsers } from '../../../features/users/usersSlice';
+import { unwrapResult } from '@reduxjs/toolkit'
 
 export default function AddPostForm() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [userId, setUserId] = useState('');
+  const [addRequestStatus, setAddRequestStatus] = useState('idle')
+
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectUsers);
-  const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
+  const canSave = Boolean(title) && Boolean(content) && Boolean(userId) && addRequestStatus === 'idle';
 
   const onTitleChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
@@ -20,11 +23,21 @@ export default function AddPostForm() {
   const onAuthorChanged = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setUserId(e.currentTarget.value);
   };
-  const onSavePostClicked = () => {
-    dispatch(addPost(title, content, userId));
-    setContent('');
-    setTitle('');
-  };
+  const onSavePostClicked = async () => {
+    try {
+      setAddRequestStatus('pending')
+      const resultAction = await dispatch(
+        addNewPost({ title, content, user: userId })
+      )
+      unwrapResult(resultAction)
+      setTitle('')
+      setContent('')
+    } catch (err) {
+      console.error('Failed to save the post: ', err)
+    } finally {
+      setAddRequestStatus('idle')
+    }
+  }
 
   const userOptions = users.map((user) => {
     return (
@@ -56,7 +69,6 @@ export default function AddPostForm() {
           onChange={onContentChanged}
         />
         <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
-          <option value=""></option>
           {userOptions}
         </select>
         <button type="button" disabled={!canSave} onClick={onSavePostClicked}>

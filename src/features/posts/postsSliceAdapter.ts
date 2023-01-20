@@ -65,7 +65,7 @@ export const fetchPosts = createAsyncThunk<
 
 export const addNewPost = createAsyncThunk(
   'posts/addNewPost',
-  async (initialPost) => {
+  async (initialPost: { title: string; content: string; user: string }) => {
     const response = await client.post('/fakeApi/posts', {
       post: initialPost,
     });
@@ -137,7 +137,7 @@ const postsSlice = createSlice({
       .addCase(fetchPosts.rejected, (state, action) => {
         if (state.status === 'loading') {
           state.status = 'failed';
-          state.error = action.payload?.toString() ?? null;
+          state.error = action.error?.message ?? null;
         }
       })
       .addCase(addNewPost.fulfilled, (state, action) => {
