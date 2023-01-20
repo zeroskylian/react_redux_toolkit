@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import store from './app/store';
 import Counter from './components/Counter';
 import Posts from './components/Posts';
@@ -12,7 +11,7 @@ import Nav from './components/Nav';
 
 function App() {
   return (
-    <Provider store={store}>
+    <div>
       <h1>RTK practice</h1>
       <Nav />
       <div style={{ marginLeft: '20px' }}>
@@ -26,7 +25,7 @@ function App() {
           <Redirect to="/posts"></Redirect>
         </Switch>
       </div>
-    </Provider>
+    </div>
   );
 }
 

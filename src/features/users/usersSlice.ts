@@ -1,33 +1,40 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { AppState } from '../../app/store';
+import { client } from '../../api/client';
+import { AppDispatch } from '../../app/store';
 
 type User = {
   id: string;
   name: string;
 };
 
-type userState = User[];
+const userAdapter = createEntityAdapter<User>({
+  selectId: (user) => user.id,
+});
 
-const initialState: userState = [
-  { id: '0', name: 'Tianna Jenkins' },
-  { id: '1', name: 'Kevin Grant' },
-  { id: '2', name: 'Madison Price' },
-];
+const initialState = userAdapter.getInitialState();
+
+// type userState = typeof initialState;
 
 const usersSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    usersLoaded: userAdapter.setAll,
+  },
 });
 
 export default usersSlice.reducer;
 
-export const selectUsers = (state: AppState) => {
+const userSelector = userAdapter.getSelectors<AppState>((state) => {
   return state.user;
-};
+});
 
-export const selectUsersById = (state: AppState, userId: string) => {
-  return state.user.find((user) => {
-    return user.id === userId;
-  });
+export const { usersLoaded } = usersSlice.actions;
+export const { selectAll: selectUsers, selectById: selectUsersById } =
+  userSelector;
+
+export const fetchUsers = async (dispatch: AppDispatch) => {
+  const response = await client.get('/fakeApi/users');
+  dispatch(usersLoaded(response.users));
 };

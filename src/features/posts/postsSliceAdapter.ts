@@ -3,13 +3,12 @@ import {
   PayloadAction,
   createSelector,
   createEntityAdapter,
+  nanoid,
+  createAsyncThunk,
 } from '@reduxjs/toolkit';
-import { nanoid } from 'nanoid';
 import { AppState } from '../../app/store';
-
-interface StringNumber {
-  [key: string]: number;
-}
+import { StringNumber } from '../../utils/utils';
+import { client } from '../../api/client';
 
 type PostsItem = {
   id: string;
@@ -28,16 +27,51 @@ interface PostReactions extends StringNumber {
   eyes: number;
 }
 
-const postAdapter = createEntityAdapter<PostsItem>({
+type PostRequestStatus = {
+  // 多个可能的状态枚举值
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+};
+
+const postsAdapter = createEntityAdapter<PostsItem>({
   selectId: (post) => post.id,
   sortComparer: (lhs, rhs) => {
     return rhs.date.localeCompare(lhs.date);
   },
 });
 
-const initialState = postAdapter.getInitialState();
+const initialState = postsAdapter.getInitialState<PostRequestStatus>({
+  status: 'idle',
+  error: null,
+});
 
 type PostsState = typeof initialState;
+
+export const fetchPosts = createAsyncThunk<
+  PostsItem[],
+  void,
+  {
+    rejectValue: Error;
+  }
+>('posts/fetchPosts', async () => {
+  try {
+    const response = await client.get('/fakeApi/posts');
+    return response.posts;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+});
+
+export const addNewPost = createAsyncThunk(
+  'posts/addNewPost',
+  async (initialPost) => {
+    const response = await client.post('/fakeApi/posts', {
+      post: initialPost,
+    });
+    return response.post as PostsItem;
+  }
+);
 
 const postsSlice = createSlice({
   name: 'posts',
@@ -46,7 +80,7 @@ const postsSlice = createSlice({
     addPost: {
       reducer(state, action: PayloadAction<PostsItem, string>) {
         // 更新插入方式
-        postAdapter.upsertOne(state, action.payload);
+        postsAdapter.upsertOne(state, action.payload);
       },
       prepare(title: string, content: string, user: string) {
         return {
@@ -88,6 +122,28 @@ const postsSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPosts.pending, (state, action) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        if (state.status === 'loading') {
+          postsAdapter.upsertMany(state, action);
+          state.status = 'succeeded';
+        }
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        if (state.status === 'loading') {
+          state.status = 'failed';
+          state.error = action.payload?.toString() ?? null;
+        }
+      })
+      .addCase(addNewPost.fulfilled, (state, action) => {
+        postsAdapter.addOne(state, action.payload);
+      });
+  },
 });
 
 export default postsSlice.reducer;
@@ -95,16 +151,11 @@ export type { PostsItem, PostReactions, PostsState };
 
 export const { addPost, updatePost, reactionAdded } = postsSlice.actions;
 
-// export const selectAllPosts = (state: AppState) => state.posts;
-
-// export const selectPostById = (state: AppState, postId: string) =>
-//   state.posts.find((post) => post.id === postId);
-
 export const {
   selectAll: selectAllPosts,
   selectById: selectPostById,
   selectIds: selectPostIds,
-} = postAdapter.getSelectors<AppState>((state) => {
+} = postsAdapter.getSelectors<AppState>((state) => {
   return state.posts;
 });
 

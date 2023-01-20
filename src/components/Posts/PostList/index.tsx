@@ -1,8 +1,9 @@
-import React from 'react';
-import { useAppSelector } from '../../../app/hook';
+import React, { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../../../app/hook';
 import {
   selectPostById,
-  selectPostIds
+  selectPostIds,
+  fetchPosts,
 } from '../../../features/posts/postsSliceAdapter';
 import { Link } from 'react-router-dom';
 import PostAuthor from '../PostAuthor';
@@ -29,10 +30,31 @@ function PostExcerpt(props: { id: string }) {
 }
 
 export default function PostList() {
-  const posts = useAppSelector(selectPostIds);
-  const renderProps = posts.map((post) => {
-    return <PostExcerpt key={post} id={post as string} />;
-  });
+  const dispatch = useAppDispatch();
+  const postIds = useAppSelector(selectPostIds);
+  const status = useAppSelector((state) => state.posts.status);
+  const error = useAppSelector((state) => state.posts.error);
+
+  // Sort posts in reverse chronological order
+  const orderedPostIds = postIds.slice().reverse();
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchPosts());
+    }
+  }, [status, dispatch]);
+
+  let renderProps;
+
+  if (status === 'loading') {
+    renderProps = <div className="loader">Loading...</div>;
+  } else if (status === 'succeeded') {
+    renderProps = orderedPostIds.map((postId) => (
+      <PostExcerpt key={postId} id={postId as string} />
+    ));
+  } else if (status === 'failed') {
+    renderProps = <div>{error}</div>;
+  }
+
   return (
     <div className="posts-list">
       <h2>Posts</h2>
