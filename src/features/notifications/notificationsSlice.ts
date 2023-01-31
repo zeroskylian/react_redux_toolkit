@@ -20,7 +20,6 @@ export const fetchNotifications = createAsyncThunk(
   async (_, { getState }) => {
     const allNotifications = selectAllNotifications(getState() as AppState);
     const [latestNotification] = allNotifications;
-    console.log((new Date()).toTimeString())
     const latestTimestamp = latestNotification ? latestNotification.date : '';
     const response = await client.get(
       `/fakeApi/notifications?since=${latestTimestamp}`

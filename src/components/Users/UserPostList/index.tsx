@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import { useAppSelector } from '../../../app/hook';
 import { selectUsersById } from '../../../features/users/usersSlice';
-import { selectPostByUser } from '../../../features/posts/postsSliceAdapter';
+import { selectPostByUser, /*selectAllPosts*/ } from '../../../features/posts/postsSliceAdapter';
 
 export default function UserPostList(
   props: RouteComponentProps<{ id: string }>
@@ -12,6 +12,11 @@ export default function UserPostList(
   const posts = useAppSelector((state) => {
     return selectPostByUser(state, id);
   });
+  // 导致额外渲染的情况
+  // const posts = useAppSelector(state => {
+  //   const allPosts = selectAllPosts(state)
+  //   return allPosts.filter(post => post.user === id)
+  // })
   const renderProps = posts
     .slice()
     .sort((lhs, rhs) => {
