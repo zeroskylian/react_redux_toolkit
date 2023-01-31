@@ -1,12 +1,12 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import store from './app/store';
 import Counter from './components/Counter';
 import Posts from './components/Posts';
 import SinglePostPage from './components/Posts/SinglePostPage';
 import EditPostForm from './components/Posts/EditPostForm';
 import UserList from './components/Users';
 import UserPostList from './components/Users/UserPostList';
+import NotificationList from './components/Notifications/NotificationList';
 import Nav from './components/Nav';
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
         <Switch>
           <Route exact path={'/posts'} component={Posts} />
           <Route path={'/counter'} component={Counter} />
+          <Route path={'/notifications'} component={NotificationList} />
           <Route exact path={'/user'} component={UserList} />
           <Route exact path={'/user/:id'} component={UserPostList} />
           <Route exact path="/posts/:id" component={SinglePostPage} />

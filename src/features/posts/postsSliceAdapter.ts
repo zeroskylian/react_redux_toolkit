@@ -47,21 +47,28 @@ const initialState = postsAdapter.getInitialState<PostRequestStatus>({
 
 type PostsState = typeof initialState;
 
-export const fetchPosts = createAsyncThunk<
+/*
+<
   PostsItem[],
   void,
   {
     rejectValue: Error;
   }
->('posts/fetchPosts', async () => {
-  try {
-    const response = await client.get('/fakeApi/posts');
-    return response.posts;
-  } catch (error) {
-    console.log(error);
-    return error;
+>
+*/
+export const fetchPosts = createAsyncThunk<PostsItem[]>(
+  'posts/fetchPosts',
+  async (_, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const response = await client.get('/fakeApi/posts');
+      return fulfillWithValue(response.posts);
+    } catch (error) {
+      console.log(error);
+      // return error;
+      return rejectWithValue(error);
+    }
   }
-});
+);
 
 export const addNewPost = createAsyncThunk(
   'posts/addNewPost',

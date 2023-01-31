@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/CountSlice';
 import postsReducer from '../features/posts/postsSliceAdapter';
 import usersSlice from '../features/users/usersSlice';
+import notificationsSlice from '../features/notifications/notificationsSlice';
 import { increment } from '../features/counter/CountSlice';
 
 const store = configureStore({
@@ -9,6 +10,7 @@ const store = configureStore({
     counter: counterReducer,
     posts: postsReducer,
     user: usersSlice,
+    notifications: notificationsSlice
   },
 });
 

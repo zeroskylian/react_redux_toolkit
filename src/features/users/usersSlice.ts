@@ -31,8 +31,11 @@ const userSelector = userAdapter.getSelectors<AppState>((state) => {
 });
 
 export const { usersLoaded } = usersSlice.actions;
-export const { selectAll: selectUsers, selectById: selectUsersById } =
-  userSelector;
+export const {
+  selectAll: selectUsers,
+  selectById: selectUsersById,
+  selectEntities: selectUserEntities,
+} = userSelector;
 
 export const fetchUsers = async (dispatch: AppDispatch) => {
   const response = await client.get('/fakeApi/users');
