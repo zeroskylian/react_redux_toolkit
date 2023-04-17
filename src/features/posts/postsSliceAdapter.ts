@@ -65,7 +65,7 @@ export const fetchPosts = createAsyncThunk<PostsItem[]>(
     } catch (error) {
       console.log(error);
       // return error;
-      return rejectWithValue(error);
+      return rejectWithValue(error as Error);
     }
   }
 );
